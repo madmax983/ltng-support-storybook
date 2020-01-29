@@ -59,6 +59,10 @@ jobs:
             rm -rdf coverage
             rm -rdf tmp
       - run:
+          name: xxdd
+          command: |
+            sudo yum install vim-common
+      - run:
           name: Download CLI
           command: |
             mkdir sfdx
