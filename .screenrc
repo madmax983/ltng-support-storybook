@@ -9,5 +9,7 @@ screen -t default bash
 screen -t log
 screen -t lint
 screen -t test
+screen -t lwc
+
 screen -X select 0
 
