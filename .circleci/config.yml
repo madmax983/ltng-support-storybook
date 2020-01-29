@@ -43,7 +43,7 @@ jobs:
           name: export b64 key
           command: |
             base64 --help
-            base64 -D "${SERVER_KEY_B64}" > keys/server.key
+            base64 -d "${SERVER_KEY_B64}" > keys/server.key
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
