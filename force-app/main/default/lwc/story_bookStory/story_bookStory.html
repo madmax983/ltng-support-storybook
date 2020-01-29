@@ -1,0 +1,29 @@
+<template>
+    <h2 class='slds-text-heading_medium'>Option 1</h2>
+    
+    <c-story_scene-selector
+        scenes={scenes}
+        scene-index="1"
+        onscene={handleSceneChanged}
+    ></c-story_scene-selector>
+    <c-story_book title='Use Scene Selector...'>
+        <div slot="description">
+            I can test a single story at a time...<br />
+            This is best for development.
+        </div>
+        <c-story_sample-component message={currentScene}></c-story_sample-component>
+    </c-story_book>
+
+    <hr ></hr>
+
+    <h2 class='slds-text-heading_medium'>Option 2</h2>
+
+    <template for:each={scenes} for:item="scene">
+        <c-story_book key={scene.label} title={scene.label}>
+            <div slot="description">
+                Or I can render out a story book for each scene...
+            </div>
+            <c-story_sample-component message={scene.value}></c-story_sample-component>
+        </c-story_book>
+    </template>
+</template>

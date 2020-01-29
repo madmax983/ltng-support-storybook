@@ -38,3 +38,4 @@ createTemplateProject.sh
 *.profile*
 **/.vscode
 **/Security.settings*
+coverage/

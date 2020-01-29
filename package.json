@@ -1,0 +1,45 @@
+{
+  "name": "ltng-support-storybook",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Example Storybook like components for lightning - Facilitators for Local LWC",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lwc": "sfdx force:lightning:lwc:start",
+    "lint": "npm run lint:lwc && npm run lint:aura",
+    "lint:lwc": "eslint force-app/main/default/lwc",
+    "lint:lwc:watch": "node node_modules/watch/cli.js 'npm run lint:lwc && echo \"- lint successful -\"' force-app/main/default/lwc/**/*.js",
+    "lint:aura": "sfdx force:lightning:lint force-app/main/default/aura --exit",
+    "lint:aura:watch": "node node_modules/watch/cli.js 'npm run lint:aura' force-app/main/default/aura/**/*.js",
+    "test": "npm run test:lwc",
+    "test:apex": "sfdx force:apex:test:run -w 10",
+    "test:apex:synchronous": "npm run test:apex -- -y",
+    "test:lwc": "sfdx-lwc-jest",
+    "test:lwc:watch": "sfdx-lwc-jest --watch",
+    "test:lwc:debug": "sfdx-lwc-jest --debug",
+    "log": "sfdx force:apex:log:tail | less -O ./.tmp/apexLog.log +F"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SalesforceCloudServices/ltng-support-storybook.git"
+  },
+  "keywords": [ "lwc", "lightning web components", "storybook"],
+  "author": "Paul Roth",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/SalesforceCloudServices/ltng-support-storybook/issues"
+  },
+  "homepage": "https://github.com/SalesforceCloudServices/ltng-support-storybook#readme",
+  "devDependencies": {
+    "@lwc/eslint-plugin-lwc": "^0.8.0",
+    "@salesforce/eslint-config-lwc": "^0.4.0",
+    "@salesforce/sfdx-lwc-jest": "^0.6.2",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "watch": "^1.0.2"
+  }
+}

@@ -13,13 +13,11 @@ package.xml
 **.profile*
 
 **/Security.settings*
-
 **/OrgPreference.settings*
-
 **/*.appMenu*
-
 **/*.appSwitch*
-
 *appMenu*
-
 *appSwitch*
+
+# example aura class for testing
+**/aura/demoAura/
