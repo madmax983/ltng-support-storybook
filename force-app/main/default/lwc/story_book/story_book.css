@@ -1,6 +1,13 @@
+.bordered {
+}
+
 .sandbox {
-    border:1px solid #CCC;
     margin-top: 4px;
+}
+
+.bordered .sandbox {
+    border:1px solid #CCC;
+    padding: 4px;
 }
 
 .storybook {

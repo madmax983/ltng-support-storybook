@@ -28,8 +28,14 @@ export default class Story_book extends LightningElement {
    */
   @api description;
 
-  /** Size of the storybook story */
+  /**
+   * Size of the storybook story
+   * @type {String} - [SMALL|MEDIUM|LARGE]
+  */
   @api size;
+
+  /** whether to include a border for the component */
+  @api border;
 
   get storyBookClasses() {
     let sizeClass = '';
@@ -41,7 +47,12 @@ export default class Story_book extends LightningElement {
         default: break;
       }
     }
-    return 'slds-box slds-theme_default storybook ' + sizeClass;
+
+    let borderedClass = '';
+    if (this.border) {
+      borderedClass = 'bordered';
+    }
+    return `slds-box slds-theme_default storybook ${sizeClass} ${borderedClass}`;
   }
 
   /** 

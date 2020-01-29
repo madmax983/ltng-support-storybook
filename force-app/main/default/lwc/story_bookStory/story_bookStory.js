@@ -38,8 +38,20 @@ export default class Story_bookStory extends LightningElement {
     this.scenes = [
       { label: 'Scenario A', value: '' },
       { label: 'Scenario B', value: 'Second scenario message' },
-      { label: 'Scenario C', value: 'Last message' }
-    ];
+      { label: 'Scenario C',
+        value: {
+          something: {
+            very: {
+              deep: {
+                message: 'All we are is dust in the wind. Dude.'
+              }
+            }
+          },
+          toString: () => {
+            return `Also works with objects.`;
+          }
+        }
+      }];
 
     this.currentScene = this.scenes[0];
   }
