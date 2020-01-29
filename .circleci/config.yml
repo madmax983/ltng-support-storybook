@@ -11,26 +11,39 @@ version: 2
 
 general:
 # Uncomment the following to specify only a specific branch
-    branches:
-      only:
-        - automatedMonitoring
-#       - dev # specific branch
-#       - /dev-.*/ # or regexes
+#    branches:
+#      only:
+#        - automatedMonitoring
+#        - dev # specific branch
+#        - /dev-.*/ # or regexes
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
     machine: true
     working_directory: ~/ci_app
+    
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
       # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+    
     steps:
       - checkout
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
       - run:
           name: cleanup old folders
           command: |
-            rm -rdf sfdx
+            rm -rdf coverage
             rm -rdf tmp
       - run:
           name: Download CLI
@@ -44,159 +57,36 @@ jobs:
             sfdx
             mkdir tmp
       - run:
-          name: Create hub key
+          name: npm install
           command: |
-            echo 'make hub key'
-            #- mkdir keys
-            echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
-            openssl rsa -in keys/server.key -check -noout
-            #- openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
-            #- openssl rsa -in keys/hub.key -check -noout
-          ### Uncomment the following if performing deployments
-          #- echo 'make deploy key'
-          #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
-          #- openssl rsa -in keys/deploy.key -check -noout
-          #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
+            npm install
       - run:
-          name: Pull from org
+          name: Run Lint
           command: |
-            echo 'pulling from org'
-            sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultusername
-            sfdx force --help
+            npm run lint
       - run:
-          name: Refresh
+          name: Run Test
           command: |
-            . refreshOrg.sh
-      - run:
-          name: Commit changes
-          command: |
-            git config --global user.email "proth@salesforce.com"
-            git config --global user.name "Paul Roth"
-            git add -A
-            git diff-index --quiet HEAD || git commit -m "Automated import of project"
-            git push origin automatedMonitoring
-      - run:
-          name: Chatter post
-          command: |
-            . refreshChatterPost.sh
+            npm run test:lwc:coverage
+          env:
+            CI: true
+#      - run:
+#          name: Run Apex Tests
+#          command: |
+#            mkdir -p ~/junit
+#            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+#      - store_test_results:
+#          path: ~/junit
 
-workflows:
-  version: 2
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 4 * * *"
-          filters:
-            branches:
-              only:
-                - automatedMonitoring
-    jobs:
-      - build
-
-
-# My Sample
-# general:
-# #   branches:
-# #     only:
-# #       - dev # or regexes /dev-.*/
-# 
-# machine:
-#   timezone: America/New_York
-#   environment:
-#     # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
-#     # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-#     DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-v5.7.6-d42cf65-linux-amd64.tar.xz
-#     SFDX_DISABLE_ENCRYPTION: true
-# 
-# dependencies:
-#   override:
-#     - wget -qO- $DX_CLI_URL | tar xJf -
-#     - ./sfdx/install
-#     - mkdir tmp
-#     - echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
-#     - openssl rsa -in keys/server.key -check -noout
-#     - sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultdevhubusername
-# 
-# test:
-#   override:
-#     - sfdx force --help
-#     - . refreshOrg.sh
-
-
-
-
-
-
-## sample from sfdx
-
-# version: 2
-# 
-# general:
-# # Uncomment the following to specify only a specific branch
-# #   branches:
-# #     only:
-# #       - dev # specific branch
-# #       - /dev-.*/ # or regexes
-# 
-# jobs:
-#   build:
-#     machine: true
-#     working_directory: ~/ci_app
-#     environment:
-#       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
-#       # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-#       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
-#     steps:
-#       - checkout
-#       - run:
-#           name: Download CLI
-#           command: |
-#             mkdir sfdx
-#             wget -qO- $DX_CLI_URL | tar xJ -C sfdx --strip-components 1
-#       - run:
-#           name: Install CLI
-#           command: |
-#             ./sfdx/install
-#             sfdx
-#             mkdir tmp
-#       - run:
-#           name: Create hub key
-#           command: |
-#             echo 'make hub key'
-#             #- mkdir keys
-#             #- echo $HUB_SERVER_KEY_HEX | xxd -r -ps >> keys/hub.key
-#             openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
-#             #- openssl rsa -in keys/hub.key -check -noout
-#           ### Uncomment the following if performing deployments
-#           #- echo 'make deploy key'
-#           #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
-#           #- openssl rsa -in keys/deploy.key -check -noout
-#           #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
-#       - run:
-#           name: Setup Org
-#           command: |
-#             echo 'Running tests'
-#             sfdx force:auth:jwt:grant --clientid $HUB_CONSUMER_KEY --jwtkeyfile assets/server.key --username $HUB_SFDC_USER --setdefaultdevhubusername -a hub
-#             sfdx force --help
-#             sfdx force:org:create -s -f ~/ci_app/config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM --wait 2
-#             sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
-#       - run:
-#           name: Run Apex Tests
-#           command: |
-#             mkdir -p ~/junit
-#             sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
-#       - store_test_results:
-#           path: ~/junit
-#       - run:
-#           name: Delete Useless Scratch Org
-#           command: |
-#             sfdx force:org:delete -u circle_build_$CIRCLE_BUILD_NUM -p
-# 
-# ### Uncomment the following if performing deployments
-# #deployment:
-# #  override:
-# #    - sfdx force:source:convert -r force-app -d testDeploy
-# #    - . cleanupDeploy.sh
-# #    - sfdx force:mdapi:deploy -d testDeploy/ -u deploy -w 2
-
-## sample from circleci
+# workflows:
+#   version: 2
+#   nightly:
+#     triggers:
+#       - schedule:
+#           cron: "0 4 * * *"
+#           filters:
+#             branches:
+#               only:
+#                 - automatedMonitoring
+#     jobs:
+#       - build
