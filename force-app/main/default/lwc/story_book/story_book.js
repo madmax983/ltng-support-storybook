@@ -60,3 +60,29 @@ export default class Story_book extends LightningElement {
    */
 }
 
+/**
+ * Defines a scene within the storybook
+ */
+export class Scene {
+  /**
+   * The label of the scene (used in scene selector)
+   * @type {String}
+   */
+  label;
+
+  /**
+   * The data we should bind to for this scene
+   * @type {any}
+   */
+  value;
+
+  /**
+   * Constructor
+   * @param {String} label 
+   * @param {any} value 
+   */
+  constructor(label, value) {
+    this.label = label;
+    this.value = value;
+  }
+}

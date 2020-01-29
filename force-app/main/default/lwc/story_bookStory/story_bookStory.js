@@ -3,12 +3,9 @@
  * Well isn't that meta.
  **/
 import { LightningElement, api, track } from 'lwc'; // eslint-disable-line no-unused-vars
+import { Scene } from 'c/story_book';
 
-/**
- * @typedef {Object} LightningComboboxOption
- * @property {String} label -
- * @property {any} value -
- */
+// require("../_types/StorybookTypes")
 
 /**
  * @typedef {Event} StorybookEvent
@@ -24,7 +21,7 @@ export default class Story_bookStory extends LightningElement {
   
   /**
    * Stories we'll work with
-   * @type {LightningComboboxOption[]}
+   * @type {Scene[]}
    */
   @api scenes;
 
@@ -36,10 +33,10 @@ export default class Story_bookStory extends LightningElement {
     that we could use in binding within our storybooks.
     */
     this.scenes = [
-      { label: 'Scenario A', value: '' },
-      { label: 'Scenario B', value: 'Second scenario message' },
-      { label: 'Scenario C',
-        value: {
+      new Scene('Scenario A', '' ),
+      new Scene('Scenario B', 'Second scenario message'),
+      new Scene('Scenario C',
+        {
           something: {
             very: {
               deep: {
@@ -51,7 +48,8 @@ export default class Story_bookStory extends LightningElement {
             return `Also works with objects.`;
           }
         }
-      }];
+      )
+    ];
 
     this.currentScene = this.scenes[0];
   }

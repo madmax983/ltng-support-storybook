@@ -3,12 +3,7 @@
  **/
 
 import { LightningElement, api, track } from 'lwc'; // eslint-disable-line no-unused-vars
-
-/**
- * @typedef {Object} LightningComboboxOption
- * @property {String} label -
- * @property {any} value -
- */
+import { Scene } from 'c/story_book'; // eslint-disable-line no-unused-vars
 
 /**
  * @typedef {Event} StorybookEvent
@@ -18,7 +13,7 @@ export default class Story_sceneSelector extends LightningElement {
   /**
    * {Label, Value} pairs that represent scenes
    * so we can test different scenarios.
-   * @type {LightningComboboxOption[]}
+   * @type {Scene[]]}
    */
   @api scenes;
 

@@ -21,3 +21,5 @@ package.xml
 
 # example aura class for testing
 **/aura/demoAura/
+
+**/_types

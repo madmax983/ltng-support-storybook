@@ -17,10 +17,12 @@ describe('story_sampleComponent', () => {
 
   it('has message if message is sent', (done) => {
     const expectedMessage = 'ABCDEFG';
+    const expectedLabel = 'cucas';
     const element = createElement('c-story_sampleComponent', {
       is: story_sampleComponent
     });
     element.message = expectedMessage;
+    element.label = expectedLabel;
     document.body.appendChild(element);
 
     const targetDiv = element.shadowRoot.querySelector('div');
