@@ -42,6 +42,7 @@ jobs:
       - run:
           name: export b64 key
           command: |
+            base64 --help
             base64 -D "${SERVER_KEY_B64}" > keys/server.key
       - run:
           name: update-npm
