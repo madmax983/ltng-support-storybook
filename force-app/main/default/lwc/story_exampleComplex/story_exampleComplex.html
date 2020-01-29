@@ -1,0 +1,19 @@
+<template>
+    <c-story_scene-selector
+        scenes={allScenes}
+        onscene={handleSceneChanged}
+    ></c-story_scene-selector>
+    <c-story_book
+        if:true={currentScene}
+        title={currentScene.label}
+        size={currentScene.value.size}
+        border
+    >
+        <div slot="description">
+            {currentScene.value.description}
+        </div>
+        <c-story_sample-component
+            message={currentScene.value.message}
+        ></c-story_sample-component>
+    </c-story_book>
+</template>
