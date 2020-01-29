@@ -1,3 +1,6 @@
+[![CircleCI Build](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook.svg?style=shield)](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook)
+[![Github](https://img.shields.io/badge/license-MIT-343434.svg)](https://choosealicense.com/licenses/mit/)
+
 # INTERNAL NOTES
 
 Wait, what is this?
