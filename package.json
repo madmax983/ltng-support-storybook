@@ -19,6 +19,7 @@
     "test:lwc": "sfdx-lwc-jest",
     "test:lwc:watch": "sfdx-lwc-jest --watch",
     "test:lwc:debug": "sfdx-lwc-jest --debug",
+    "test:lwc:coverage": "sfdx-lwc-jest --coverage",
     "log": "sfdx force:apex:log:tail | less -O ./.tmp/apexLog.log +F"
   },
   "repository": {
