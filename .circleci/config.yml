@@ -34,7 +34,9 @@ jobs:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
       # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
-    
+      # CONSUMER_KEY = (specified in circleci environment variables)
+      # USER_NAME = (specified in circleci environment variables - OR from new scratch org user)
+      # SERVER_KEY_HEX = (specified in circleci environment variables, hex of key)
     steps:
       - checkout
       - run:
@@ -68,6 +70,12 @@ jobs:
             sfdx
             mkdir tmp
       - run:
+          name: Authenticate to org
+          command: |
+            echo 'pulling from org'
+            sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultusername
+            sfdx force --help
+      - run:
           name: Run Lint
           command: |
             npm run lint
@@ -79,13 +87,13 @@ jobs:
             CI: true
       - store_artifacts:
           path: ./coverage
-      - run:
-          name: Run Apex Tests
-          command: |
-            mkdir -p ~/junit
-            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
-      - store_test_results:
-          path: ~/junit
+#      - run:
+#          name: Run Apex Tests
+#          command: |
+#            mkdir -p ~/junit
+#            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+#      - store_test_results:
+#          path: ~/junit
 
 # workflows:
 #   version: 2
