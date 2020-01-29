@@ -20,13 +20,15 @@ general:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    working_directory: ~/mern-starter # directory where steps will run
+#    docker: # run the steps with Docker
+#      - image: circleci/node:10.16.3 # ...with this image as the primary container; this is where all `steps` will run
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x]
 
     machine: true
-    working_directory: ~/ci_app
+#    working_directory: ~/ci_app
     
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
@@ -35,11 +37,20 @@ jobs:
     
     steps:
       - checkout
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: npm install
+          command: |
+            npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
       - run:
           name: cleanup old folders
           command: |
@@ -56,10 +67,6 @@ jobs:
             ./sfdx/install
             sfdx
             mkdir tmp
-      - run:
-          name: npm install
-          command: |
-            npm install
       - run:
           name: Run Lint
           command: |
