@@ -1,5 +1,7 @@
-[![CircleCI Build](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook.svg?style=shield)](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook)
+[![CircleCI](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook.svg?style=shield&circle-token=b8cd995667170827eb5728ab5a84815f10ccc3b6)](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook)
 [![Github](https://img.shields.io/badge/license-MIT-343434.svg)](https://choosealicense.com/licenses/mit/)
+
+
 
 # INTERNAL NOTES
 
