@@ -39,3 +39,6 @@ createTemplateProject.sh
 **/.vscode
 **/Security.settings*
 coverage/
+
+# keys / circleci
+keys/*
