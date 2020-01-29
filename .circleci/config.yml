@@ -64,7 +64,7 @@ jobs:
       - run:
           name: Install CLI
           command: |
-            ./sfdx/install
+            sudo ./sfdx/install
             sfdx
             mkdir tmp
       - run:
@@ -74,16 +74,18 @@ jobs:
       - run:
           name: Run Test
           command: |
-            npm run test:lwc:coverage
+            npm run test:lwc:coverage --coverage
           env:
             CI: true
-#      - run:
-#          name: Run Apex Tests
-#          command: |
-#            mkdir -p ~/junit
-#            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
-#      - store_test_results:
-#          path: ~/junit
+      - store_artifacts:
+          path: ./coverage
+      - run:
+          name: Run Apex Tests
+          command: |
+            mkdir -p ~/junit
+            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+      - store_test_results:
+          path: ~/junit
 
 # workflows:
 #   version: 2
