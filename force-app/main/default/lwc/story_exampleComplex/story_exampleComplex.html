@@ -6,8 +6,9 @@
     <c-story_book
         if:true={currentScene}
         title={currentScene.label}
-        size={currentScene.value.size}
-        border
+        width='300px'
+        height='300px'
+        border='true'
     >
         <div slot="description">
             {currentScene.value.description}
