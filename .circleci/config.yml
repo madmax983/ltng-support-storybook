@@ -40,6 +40,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: export b64 key
+          command: |
+            base64 -D "${SERVER_KEY_B64}" > keys/server.key
+      - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache: # special step to restore the dependency cache
@@ -59,10 +63,6 @@ jobs:
             rm -rdf coverage
             rm -rdf tmp
       - run:
-          name: xxdd
-          command: |
-            sudo yum install vim-common
-      - run:
           name: Download CLI
           command: |
             mkdir sfdx
@@ -78,7 +78,7 @@ jobs:
           command: |
             echo 'make hub key'
             #- mkdir keys
-            echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
+            # echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
             openssl rsa -in keys/server.key -check -noout
             #- openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
             #- openssl rsa -in keys/hub.key -check -noout
