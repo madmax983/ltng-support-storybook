@@ -13,7 +13,7 @@ general:
 # Uncomment the following to specify only a specific branch
     branches:
       only:
-	- master
+        - master
 #        - dev # specific branch
 #        - /dev-.*/ # or regexes
 
