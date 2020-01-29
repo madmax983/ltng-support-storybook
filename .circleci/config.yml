@@ -1,0 +1,116 @@
+# captured from:
+# https://github.com/forcedotcom/sfdx-circleci
+# compare to:
+# https://github.com/SalesforceCloudServices/demoDxCircleCI
+# circle ci 2.0
+# https://circleci.com/docs/2.0/
+# cron every day at 2am
+# https://crontab.guru/every-day-at-2am
+
+version: 2.1
+
+general:
+# Uncomment the following to specify only a specific branch
+#    branches:
+#      only:
+#        - automatedMonitoring
+#        - dev # specific branch
+#        - /dev-.*/ # or regexes
+
+jobs:
+  build:
+    # runs-on: ubuntu-latest
+    working_directory: ~/mern-starter # directory where steps will run
+    docker: # run the steps with Docker
+      - image: circleci/node:10.16.3 # ...with this image as the primary container; this is where all `steps` will run
+#    strategy:
+#      matrix:
+#        node-version: [8.x, 10.x, 12.x]
+
+#    machine: true
+#    working_directory: ~/ci_app
+    
+    environment:
+      # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
+      # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
+      - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+      # CONSUMER_KEY = (specified in circleci environment variables)
+      # USER_NAME = (specified in circleci environment variables - OR from new scratch org user)
+      # SERVER_KEY_HEX = (specified in circleci environment variables, hex of key)
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: npm install
+          command: |
+            npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: cleanup old folders
+          command: |
+            rm -rdf coverage
+            rm -rdf tmp
+      - run:
+          name: Download CLI
+          command: |
+            mkdir sfdx
+            wget -qO- $DX_CLI_URL | tar xJ -C sfdx --strip-components 1
+      - run:
+          name: Install CLI
+          command: |
+            sudo ./sfdx/install
+            sfdx
+            mkdir tmp
+#      - run:
+#          name: export b64 key
+#          command: |
+#            base64 --help
+#            echo "${SERVER_KEY_B64}" | base64 -d > keys/server.key
+#            openssl rsa -in keys/server.key -check -noout
+#      - run:
+#          name: Authenticate to org
+#          command: |
+#            echo 'pulling from org'
+#            sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultusername
+#            sfdx force --help
+      - run:
+          name: Run Lint
+          command: |
+            npm run lint
+      - run:
+          name: Run Test
+          command: |
+            npm run test:lwc:coverage --coverage
+          env:
+            CI: true
+      - store_artifacts:
+          path: ./coverage
+#      - run:
+#          name: Run Apex Tests
+#          command: |
+#            mkdir -p ~/junit
+#            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+#            # -l RunLocalTests?
+#      - store_test_results:
+#          path: ~/junit
+
+# workflows:
+#   version: 2
+#   nightly:
+#     triggers:
+#       - schedule:
+#           cron: "0 4 * * *"
+#           filters:
+#             branches:
+#               only:
+#                 - automatedMonitoring
+#     jobs:
+#       - build

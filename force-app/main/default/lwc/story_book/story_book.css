@@ -1,0 +1,25 @@
+.bordered {
+}
+
+.sandbox {
+    margin-top: 4px;
+}
+
+.bordered .sandbox {
+    border:1px solid #CCC;
+    padding: 4px;
+}
+
+.storybook {
+    margin-bottom: 10px;
+}
+
+.small {
+    width: 30em;
+}
+.medium {
+    width: 48em;
+}
+.large {
+    width: 64em;
+}

@@ -4,7 +4,7 @@ Wait, what is this?
 
 This is meant to be a simple starting point for creating Lightning demo projects
 
-
+.
 
 # Structure of the project
 
