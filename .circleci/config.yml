@@ -70,6 +70,20 @@ jobs:
             sfdx
             mkdir tmp
       - run:
+          name: Create hub key
+          command: |
+            echo 'make hub key'
+            #- mkdir keys
+            echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
+            openssl rsa -in keys/server.key -check -noout
+            #- openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
+            #- openssl rsa -in keys/hub.key -check -noout
+          ### Uncomment the following if performing deployments
+          #- echo 'make deploy key'
+          #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
+          #- openssl rsa -in keys/deploy.key -check -noout
+          #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
+      - run:
           name: Authenticate to org
           command: |
             echo 'pulling from org'
