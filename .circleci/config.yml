@@ -40,11 +40,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: export b64 key
-          command: |
-            base64 --help
-            echo "${SERVER_KEY_B64}" | base64 -d > keys/server.key
-      - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache: # special step to restore the dependency cache
@@ -74,26 +69,18 @@ jobs:
             sudo ./sfdx/install
             sfdx
             mkdir tmp
-      - run:
-          name: Create hub key
-          command: |
-            echo 'make hub key'
-            #- mkdir keys
-            # echo $SERVER_KEY_HEX | xxd -r -ps >> keys/server.key
-            openssl rsa -in keys/server.key -check -noout
-            #- openssl enc -nosalt -aes-256-cbc -d -in assets/server.key.enc -out assets/server.key -base64 -K $DECRYPTION_KEY -iv $DECRYPTION_IV
-            #- openssl rsa -in keys/hub.key -check -noout
-          ### Uncomment the following if performing deployments
-          #- echo 'make deploy key'
-          #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
-          #- openssl rsa -in keys/deploy.key -check -noout
-          #- sfdx force:auth:jwt:grant --clientid $DEPLOY_CONSUMER_KEY --jwtkeyfile keys/deploy.key --username $DEPLOY_SFDC_USER -a deploy
-      - run:
-          name: Authenticate to org
-          command: |
-            echo 'pulling from org'
-            sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultusername
-            sfdx force --help
+#      - run:
+#          name: export b64 key
+#          command: |
+#            base64 --help
+#            echo "${SERVER_KEY_B64}" | base64 -d > keys/server.key
+#            openssl rsa -in keys/server.key -check -noout
+#      - run:
+#          name: Authenticate to org
+#          command: |
+#            echo 'pulling from org'
+#            sfdx force:auth:jwt:grant --clientid $CONSUMER_KEY --jwtkeyfile keys/server.key --username $SFDC_USER --setdefaultusername
+#            sfdx force --help
       - run:
           name: Run Lint
           command: |
@@ -111,6 +98,7 @@ jobs:
 #          command: |
 #            mkdir -p ~/junit
 #            sfdx force:apex:test:run -c -d ~/junit -r junit --wait 5
+#            # -l RunLocalTests?
 #      - store_test_results:
 #          path: ~/junit
 
