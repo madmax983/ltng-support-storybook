@@ -20,13 +20,22 @@
     "test:lwc:watch": "sfdx-lwc-jest --watch",
     "test:lwc:debug": "sfdx-lwc-jest --debug",
     "test:lwc:coverage": "sfdx-lwc-jest --coverage",
-    "log": "sfdx force:apex:log:tail | less -O ./.tmp/apexLog.log +F"
+    "log": "sfdx force:apex:log:tail | less -O ./.tmp/apexLog.log +F",
+    "verify": "npm run lint && npm run test",
+    "verify:msg": "echo -e '\\n\\n\\n--- Running Verification Steps ---\\n\\n\\n'"
+  },
+  "husky": {
+    "pre-commit": "npm run verify:msg && npm run verify"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SalesforceCloudServices/ltng-support-storybook.git"
   },
-  "keywords": [ "lwc", "lightning web components", "storybook"],
+  "keywords": [
+    "lwc",
+    "lightning web components",
+    "storybook"
+  ],
   "author": "Paul Roth",
   "license": "UNLICENSED",
   "bugs": {
@@ -41,6 +50,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
+    "husky": "^4.2.1",
     "watch": "^1.0.2"
   }
 }
