@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>List Example using multiple Storybooks all at the same time.
+
+(Note: you will likely never create pages for your stories)</description>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>decorate</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>richTextValue</name>
+                <value>&lt;p&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;List example of a Storybook Story. &lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;This storybook has multiple scenes.  Here we can see the same component under multiple conditions all at once, so we can verify how it looks.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Should it have the attribute set or should it be set to a lot of data? Should the component be narrow or wide or fit to the screen? etc.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;(This is for demonstration purposes only. Typically, we would only use storybooks locally and not publish to an org.)&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;For more information, &lt;a href=&quot;https://github.com/SalesforceCloudServices/ltng-support-storybook#complex&quot; target=&quot;_blank&quot;&gt;please see the documentation HERE&lt;/a&gt;.&lt;/p&gt;</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:richText</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentName>story_exampleList</componentName>
+        </componentInstances>
+        <name>main</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>Storybook: List Example</masterLabel>
+    <template>
+        <name>flexipage:defaultAppHomeTemplate</name>
+    </template>
+    <type>AppPage</type>
+</FlexiPage>
