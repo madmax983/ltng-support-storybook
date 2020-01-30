@@ -29,12 +29,6 @@ export default class Story_exampleComplex extends LightningElement {
   @api allScenes;
 
   /**
-   * Which scene to show by default
-   * @type {Integer}
-   */
-  @api initialSceneIndex = 1;
-
-  /**
    * Initial scene we want to show
    */
 
@@ -45,22 +39,23 @@ export default class Story_exampleComplex extends LightningElement {
         sandboxStyles: 'width: 300px; height: 300px; border: 1px solid blue; padding: 20px;',
         message: 'Message for component'
       }),
-      new Scene('Empty Scene', {
-        description: 'Description for the scene',
-        message: null
-      }),
-      new Scene('Large Width Scene', {
-        description: 'Wide component with a message',
-        width: 'large',
+      new Scene('Small Width Scene', {
+        width: 'small',
+        sandboxStyles: 'height: 200px;',
         message: LONG_TEXT
       }),
       new Scene('Medium Width Scene', {
         width: 'medium',
         message: LONG_TEXT
       }),
-      new Scene('Small Width Scene', {
-        width: 'small',
+      new Scene('Large Width Scene', {
+        description: 'Wide component with a message',
+        width: 'large',
         message: LONG_TEXT
+      }),
+      new Scene('Empty Scene', {
+        description: 'Description for the scene',
+        message: null
       })
     ];
 
