@@ -1,5 +1,18 @@
 <template>
+
+    <!--
+        instead of selecting which scene to see,
+        lets just see one of every scene.
+    -->
     <template for:each={scenes} for:item="scene">
+
+        <!--
+            From the storybook side, we just bind to the current scene.
+            
+            note the large width is based on the Lightning Design System width
+            @see https://www.lightningdesignsystem.com/utilities/sizing/
+        -->
+
         <c-story_book
             key={scene.label}
             title={scene.label}

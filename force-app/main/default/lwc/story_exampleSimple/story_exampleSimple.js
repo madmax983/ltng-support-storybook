@@ -6,6 +6,6 @@ import {Scene} from 'c/story_book';
 
 export default class Story_exampleSimple extends LightningElement {
   @api currentScene = new Scene('Simple Scenario',{
-    valueToShow: 'Message bound from the scene'
+    messageToShow: 'Message bound from the scene'
   });
 }
