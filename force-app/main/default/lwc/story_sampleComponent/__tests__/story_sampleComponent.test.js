@@ -17,14 +17,19 @@ describe('story_sampleComponent', () => {
 
   it('has message if message is sent', (done) => {
     const expectedMessage = 'ABCDEFG';
+    const expectedLabel = 'cucas';
     const element = createElement('c-story_sampleComponent', {
       is: story_sampleComponent
     });
     element.message = expectedMessage;
+    element.label = expectedLabel;
     document.body.appendChild(element);
 
-    const targetDiv = element.shadowRoot.querySelector('div');
-    expect(targetDiv.innerHTML).toContain(expectedMessage);
+    const lfrt = element.shadowRoot.querySelector('lightning-formatted-rich-text');
+    expect(lfrt).not.toBeNull();
+    expect(lfrt.value).toBe(expectedMessage);
+
+    expect(element.shadowRoot.querySelector('.error')).toBeNull();
 
     done();
   });
@@ -36,9 +41,13 @@ describe('story_sampleComponent', () => {
     document.body.appendChild(element);
 
     const expectedMessage = '- No message sent -';
-    const targetDiv = element.shadowRoot.querySelector('div');
-    expect(targetDiv.innerHTML).toContain(expectedMessage);
+    const lfrt = element.shadowRoot.querySelector('lightning-formatted-rich-text');
+    const error = element.shadowRoot.querySelector('.error');
 
+    expect(lfrt).toBeNull();
+    expect(error).not.toBeNull();
+    expect(error.innerHTML).toContain(expectedMessage);
+    
     done();
   });
 });

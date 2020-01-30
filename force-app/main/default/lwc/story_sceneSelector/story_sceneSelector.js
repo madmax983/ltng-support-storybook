@@ -3,37 +3,41 @@
  **/
 
 import { LightningElement, api, track } from 'lwc'; // eslint-disable-line no-unused-vars
+import { Scene } from 'c/story_book'; // eslint-disable-line no-unused-vars
 
 /**
- * @typedef {Object} LightningComboboxOption
- * @property {String} label -
- * @property {any} value -
+ * Storybook Event
+ * 
+ * @event CustomEvent#scene
+ * @type {object}
+ * @property {Scene} detail - the scene changed
  */
 
 /**
- * @typedef {Event} StorybookEvent
+ * Component to choose between a set of scenes.
+ * 
+ * @fires CustomEvent#scene - when the scene changes
  */
-
 export default class Story_sceneSelector extends LightningElement {
+
+  //-- @TODO: convert the scenes and index to getter/setters
+  //-- as they are linked, the getter/setters allow for setting race conditions
+  //-- as it is now though, it is not expected they will change through code.
+
   /**
    * {Label, Value} pairs that represent scenes
    * so we can test different scenarios.
-   * @type {LightningComboboxOption[]}
+   * @type {Scene[]]}
    */
   @api scenes;
 
   /**
-   * The index of the scene to default to
-   * (defaults to 0)
-   * @type {Number}
+   * The internal scene index we are using
+   * @type {Integer}
    */
-  @api sceneIndex = 0;
+  @api index = 0;
 
-  /**
-   * Handler for when the scene changed
-   * @type {function}
-   */
-  @api handleSceneChanged;
+  //-- getters / setters
 
   //-- private
 
@@ -43,13 +47,19 @@ export default class Story_sceneSelector extends LightningElement {
    * This is the value used in the combobox so it defaults correctly.
    * @type {any}
    */
-  @track defaultScene;
+  @track _comboboxOption;
 
   /**
    * Internal representation of the scene information
    * so scenes can support objects while the combobox does not complain)
    */
-  @track _sceneOptions;
+  @track _comboboxOptions;
+
+  /**
+   * Handler for when the scene changed
+   * @type {function}
+   */
+  @track handleSceneChanged;
 
   //-- handlers
 
@@ -61,42 +71,45 @@ export default class Story_sceneSelector extends LightningElement {
     evt.preventDefault();
  
     let newSceneIndex = parseInt(evt.target.value, 10);
-    this.notifySceneChanged(newSceneIndex);
+    this.handleSceneIndexChanged(newSceneIndex);
   }
  
   connectedCallback(){
-    let _sceneOptions = [];
-    if (Array.isArray(this.scenes)) {
-
-      //-- use a numeric string based index
-      //-- because the combobox doesn't work well outside of strings...
-      //-- we will use the index to then get the actual value
+    console.log('callback');
+    //-- use a numeric string based index
+    //-- because the combobox doesn't work well outside of strings...
+    //-- we will use the index to then get the actual value
+    let _comboboxOptions = [];
+    if (Array.isArray(this.scenes) && this.scenes.length > 0) {
       this.scenes.forEach((scene, index) => {
-        _sceneOptions.push({label:scene.label, value:''+index})
+        _comboboxOptions.push({label:scene.label, value:''+index})
       });
- 
-      //-- pre select the index
-      let sceneIndex = 0;
-      if (0 <= this.sceneIndex && this.sceneIndex < this.scenes.length){
-        sceneIndex = this.sceneIndex;
-      }
-      this.defaultScene = _sceneOptions[sceneIndex].value;
- 
-      //-- when binding the value, the combobox does not dispatch a change event
-      this.notifySceneChanged(sceneIndex);
     }
-    
-    this._sceneOptions = _sceneOptions;
-  }
+    this._comboboxOptions = _comboboxOptions;
  
+    //-- pre select the index
+    this.handleSceneIndexChanged(this.index);
+  }
+
   /**
    * Dispatch an event letting everyone know the scene has changed
-   * @param {Integer} newSceneIndex - index of the new scene to use.
-   * @dispatch {StorybookEvent} 
+   * @param {Integer} newSceneIndexStr - index of the new scene to use.
+   * @fires CustomEvent:scene
    */
-  notifySceneChanged(newSceneIndex) {
-    if (this.scenes && 0 <= newSceneIndex && newSceneIndex < this.scenes.length) {
-      let newSceneObject = this.scenes[newSceneIndex];
+  handleSceneIndexChanged(newSceneIndexStr) {
+    const newSceneIndex = parseInt(newSceneIndexStr, 10);
+    if (this.scenes && this.scenes.length > 0) {
+      let indexToUse = newSceneIndex;
+      if (indexToUse < 0 || indexToUse >= this.scenes.length) {
+        indexToUse = 0;
+      }
+      this.index = indexToUse;
+      
+      //-- select the option in the combobox.
+      this._comboboxOption = this._comboboxOptions[indexToUse].value;
+      
+      //-- identify the scene
+      const newSceneObject = this.scenes[this.index];
       const sceneChangeEvt = new CustomEvent('scene', { detail: newSceneObject });
       this.dispatchEvent(sceneChangeEvt);
     }

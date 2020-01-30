@@ -14,12 +14,12 @@
     margin-bottom: 10px;
 }
 
-.small {
+.width-small {
     width: 30em;
 }
-.medium {
+.width-medium {
     width: 48em;
 }
-.large {
+.width-large {
     width: 64em;
 }

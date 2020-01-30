@@ -1,6 +1,6 @@
 <template>
     <div
-        if:true={_sceneOptions}
+        if:true={_comboboxOptions}
         class="scene-selector"
     >
         <!--
@@ -10,8 +10,8 @@
         -->
         <lightning-combobox
             label="Scenes"
-            value={defaultScene}
-            options={_sceneOptions}
+            value={_comboboxOption}
+            options={_comboboxOptions}
             onchange={handleSceneChange}
         ></lightning-combobox>
     </div>

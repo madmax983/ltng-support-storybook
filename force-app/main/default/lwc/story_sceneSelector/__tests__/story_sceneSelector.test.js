@@ -38,13 +38,22 @@ describe('c-story_sceneSelector', () => {
     combobox.dispatchEvent(new CustomEvent('change'));
 
     expect(sceneEventWatcher).toHaveBeenCalled();
+
+    expect(sceneEventWatcher).toHaveBeenCalledTimes(2);
+
+    const secondCallEvent = sceneEventWatcher.mock.calls[1][0];
+    const sceneToMatchTo = EXAMPLE_SCENES[1];
+    expect(secondCallEvent).not.toBeNull();
+    expect(secondCallEvent.detail).not.toBeNull();
+    expect(secondCallEvent.detail.label).toBe(sceneToMatchTo.label);
+
     done();
   });
 
   it('captures the 0 index if the initial index is negative', (done) => {
     const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
     element.scenes = EXAMPLE_SCENES;
-    element.sceneIndex = 0;
+    element.index = 0;
     document.body.appendChild(element);
 
     const combobox=element.shadowRoot.querySelector('lightning-combobox');
@@ -55,11 +64,62 @@ describe('c-story_sceneSelector', () => {
   it('captures the 0 index if the initial index is way too big', (done) => {
     const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
     element.scenes = EXAMPLE_SCENES;
-    element.sceneIndex = 1000;
+    element.index = 1000;
     document.body.appendChild(element);
 
     const combobox=element.shadowRoot.querySelector('lightning-combobox');
     expect(combobox.value).toBe('0');
     done();
+  });
+
+  it('instantiates even if no scenes are passed', () => {
+    const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
+    document.body.appendChild(element);
+
+    expect(element).not.toBeNull();
+
+    const sceneHandler = jest.fn();
+    element.addEventListener('screen', sceneHandler);
+
+    const combobox = element.shadowRoot.querySelector('lightning-combobox');
+    expect(combobox).not.toBeNull();
+    combobox.dispatchEvent(new CustomEvent('change'));
+
+    expect(sceneHandler).not.toHaveBeenCalled();
+  });
+
+  it('instantiates even scenes are empty', () => {
+    const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
+    element.scenes = [];
+    document.body.appendChild(element);
+
+    expect(element).not.toBeNull();
+
+    const sceneHandler = jest.fn();
+    element.addEventListener('screen', sceneHandler);
+
+    const combobox = element.shadowRoot.querySelector('lightning-combobox');
+    expect(combobox).not.toBeNull();
+    combobox.dispatchEvent(new CustomEvent('change'));
+
+    expect(sceneHandler).not.toHaveBeenCalled();
+  });
+
+  it('instantiates even index is invalid', () => {
+    const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
+    element.scenes = [];
+    element.index = '1';
+    document.body.appendChild(element);
+
+    expect(element).not.toBeNull();
+
+    const sceneHandler = jest.fn();
+    element.addEventListener('screen', sceneHandler);
+
+    const combobox = element.shadowRoot.querySelector('lightning-combobox');
+    expect(combobox).not.toBeNull();
+    combobox.dispatchEvent(new CustomEvent('change'));
+
+    expect(sceneHandler).not.toHaveBeenCalled();
   });
 });

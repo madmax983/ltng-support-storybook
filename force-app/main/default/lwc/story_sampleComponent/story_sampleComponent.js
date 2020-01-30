@@ -5,4 +5,5 @@ import { LightningElement, api } from 'lwc';
 
 export default class Story_sampleComponent extends LightningElement {
   @api message;
+  @api label;
 }
