@@ -1,18 +1,41 @@
 <template>
+    <!--
+        Scene selector allows us to choose from the list of all scenes.
+        Note that it dispatches a 'scene' event
+        where the event.detail is the new scene chosen.
+        @dispatch {CustomEvent='scene'}
+    -->
     <c-story_scene-selector
         scenes={allScenes}
         onscene={handleSceneChanged}
+        scene-index={initialSceneIndex}
     ></c-story_scene-selector>
+
+    <!--
+        From the storybook side, we don't care, we just bind to the current scene.
+
+        Note, we want to include the following, so we don't get null errors
+        when it first loads:
+        if:true={currentScene}
+    -->
     <c-story_book
         if:true={currentScene}
         title={currentScene.label}
-        width='300px'
-        height='300px'
-        border='true'
+        width={currentScene.value.width}
+        sandbox-styles={currentScene.value.sandboxStyles}
     >
+        <!--
+            We can optionally include a description slot
+            and it will be shown within the story.
+        -->
         <div slot="description">
             {currentScene.value.description}
         </div>
+
+        <!--
+            Finally we show our component.
+            This will be placed inside the 'sandbox' of the story
+        -->
         <c-story_sample-component
             message={currentScene.value.message}
         ></c-story_sample-component>

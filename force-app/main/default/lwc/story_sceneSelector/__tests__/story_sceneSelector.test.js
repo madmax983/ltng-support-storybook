@@ -62,4 +62,37 @@ describe('c-story_sceneSelector', () => {
     expect(combobox.value).toBe('0');
     done();
   });
+
+  it('instantiates even if no scenes are passed', () => {
+    const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
+    document.body.appendChild(element);
+
+    expect(element).not.toBeNull();
+
+    const sceneHandler = jest.fn();
+    element.addEventListener('screen', sceneHandler);
+
+    const combobox = element.shadowRoot.querySelector('lightning-combobox');
+    expect(combobox).not.toBeNull();
+    combobox.dispatchEvent(new CustomEvent('change'));
+
+    expect(sceneHandler).not.toHaveBeenCalled();
+  });
+
+  it('instantiates even scenes are empty', () => {
+    const element = createElement('c-story_sceneSelector', { is:story_sceneSelector });
+    element.scenes = [];
+    document.body.appendChild(element);
+
+    expect(element).not.toBeNull();
+
+    const sceneHandler = jest.fn();
+    element.addEventListener('screen', sceneHandler);
+
+    const combobox = element.shadowRoot.querySelector('lightning-combobox');
+    expect(combobox).not.toBeNull();
+    combobox.dispatchEvent(new CustomEvent('change'));
+
+    expect(sceneHandler).not.toHaveBeenCalled();
+  });
 });

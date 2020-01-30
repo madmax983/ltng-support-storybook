@@ -1,12 +1,10 @@
-/**
- * A single storybook story for use in a storybook.
- **/
-
 import { LightningElement, api, track } from 'lwc'; // eslint-disable-line no-unused-vars
 
 const SIZE_SMALL = 'SMALL';
+const SIZE_NARROW = 'NARROW';
 const SIZE_MEDIUM = 'MEDIUM';
 const SIZE_LARGE = 'LARGE';
+const SIZE_WIDE = 'WIDE';
 
 export {
   SIZE_SMALL,
@@ -14,6 +12,9 @@ export {
   SIZE_LARGE
 }
 
+/**
+ * A single storybook story for use in a storybook.
+ **/
 export default class Story_book extends LightningElement {
 
   /**
@@ -30,15 +31,16 @@ export default class Story_book extends LightningElement {
 
   /**
    * Width of the storybook story
-   * @type {String} - [SMALL|MEDIUM|LARGE|:css]
+   * @type {String} - (SMALL|MEDIUM|LARGE)
   */
   @api width;
 
   /**
-   * Height of the storybook story
-   * @type {String} - [String:css]
-  */
-  @api height;
+   * Styles to apply to the sandbox.
+   * Allowing us to specify explicit sizes, borders, paddings, etc.
+   * @type {String}
+   */
+  @api sandboxStyles;
 
   /** whether to include a border for the component */
   @api border;
@@ -48,42 +50,19 @@ export default class Story_book extends LightningElement {
     if ((''+this.border).toUpperCase()==='TRUE') {
       borderedClass = 'bordered';
     }
-    return `slds-box slds-theme_default storybook ${borderedClass}`;
-  }
-
-  get sandboxStyle() {
-    let styleCSS = '';
+    let widthClass = '';
     // styleCSS += ` width: ${this.width};`;
     if (this.width) {
       switch(this.width.toUpperCase()) {
-        case SIZE_SMALL: styleCSS += 'width: 30em;'; break;
-        case SIZE_MEDIUM: styleCSS += 'width: 48em;'; break;
-        case SIZE_LARGE: styleCSS += 'width: 64em;'; break;
-        default: styleCSS += `width: ${this.width};`;
+        case SIZE_NARROW:
+        case SIZE_SMALL: widthClass = 'width-small'; break;
+        case SIZE_MEDIUM: widthClass = 'width-medium'; break;
+        case SIZE_WIDE:
+        case SIZE_LARGE: widthClass = 'width-large'; break;
+        default: break;
       }
     }
-    console.log('width:' + this.width);
-    console.log('styleCSS:' + styleCSS);
-    styleCSS += ' height: 300px;';
-    return styleCSS;
-  }
-
-  get sandboxStyle2() {
-    let styleCSS = '';
-    if (this.width) {
-      switch(this.width.toUpperCase()) {
-        case SIZE_SMALL: styleCSS += 'width: 30em;'; break;
-        case SIZE_MEDIUM: styleCSS += 'width: 48em;'; break;
-        case SIZE_LARGE: styleCSS += 'width: 64em;'; break;
-        default: styleCSS += `width: ${this.width};`;
-      }
-    }
-    if (this.height) {
-      switch(this.height.toUpperCase()) {
-        default: styleCSS += `height: ${this.height};`;
-      }
-    }
-    return styleCSS;
+    return `slds-box slds-theme_default storybook ${widthClass} ${borderedClass}`;
   }
 
   /** 
@@ -114,6 +93,6 @@ export class Scene {
    */
   constructor(label, value) {
     this.label = label;
-    this.value = value;
+    this.value = value || {};
   }
 }

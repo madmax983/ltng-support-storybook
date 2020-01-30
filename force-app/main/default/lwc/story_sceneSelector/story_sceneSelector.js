@@ -6,9 +6,18 @@ import { LightningElement, api, track } from 'lwc'; // eslint-disable-line no-un
 import { Scene } from 'c/story_book'; // eslint-disable-line no-unused-vars
 
 /**
- * @typedef {Event} StorybookEvent
+ * Storybook Event
+ * 
+ * @event CustomEvent#scene
+ * @type {object}
+ * @property {Scene} detail - the scene changed
  */
 
+/**
+ * Component to choose between a set of scenes.
+ * 
+ * @fires CustomEvent#scene - when the scene changes
+ */
 export default class Story_sceneSelector extends LightningElement {
   /**
    * {Label, Value} pairs that represent scenes
@@ -28,7 +37,7 @@ export default class Story_sceneSelector extends LightningElement {
    * Handler for when the scene changed
    * @type {function}
    */
-  @api handleSceneChanged;
+  @track handleSceneChanged;
 
   //-- private
 
@@ -61,7 +70,7 @@ export default class Story_sceneSelector extends LightningElement {
  
   connectedCallback(){
     let _sceneOptions = [];
-    if (Array.isArray(this.scenes)) {
+    if (Array.isArray(this.scenes) && this.scenes.length > 0) {
 
       //-- use a numeric string based index
       //-- because the combobox doesn't work well outside of strings...
@@ -87,7 +96,7 @@ export default class Story_sceneSelector extends LightningElement {
   /**
    * Dispatch an event letting everyone know the scene has changed
    * @param {Integer} newSceneIndex - index of the new scene to use.
-   * @dispatch {StorybookEvent} 
+   * @fires CustomEvent:scene
    */
   notifySceneChanged(newSceneIndex) {
     if (this.scenes && 0 <= newSceneIndex && newSceneIndex < this.scenes.length) {

@@ -1,11 +1,10 @@
-/**
- * More complex demo allowing multiple scenes to be tested.
- **/
 import { LightningElement, api } from 'lwc';
 import {Scene} from 'c/story_book';
-// import { isObject } from 'util';
 
 /* eslint-disable */
+const MEDIUM_TEXT = `
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus vestibulum mattis ullamcorper velit sed. Tristique nulla aliquet enim tortor. Massa tincidunt dui ut ornare lectus sit amet est. Senectus et netus et malesuada fames. Pharetra et ultrices neque ornare aenean. Eget felis eget nunc lobortis mattis aliquam faucibus. Arcu bibendum at varius vel pharetra vel. Quis risus sed vulputate odio ut enim blandit volutpat. Vel eros donec ac odio tempor orci. Facilisis volutpat est velit egestas dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Eu feugiat pretium nibh ipsum consequat nisl. Purus viverra accumsan in nisl nisi scelerisque.`;
+
 const LONG_TEXT = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus vestibulum mattis ullamcorper velit sed. Tristique nulla aliquet enim tortor. Massa tincidunt dui ut ornare lectus sit amet est. Senectus et netus et malesuada fames. Pharetra et ultrices neque ornare aenean. Eget felis eget nunc lobortis mattis aliquam faucibus. Arcu bibendum at varius vel pharetra vel. Quis risus sed vulputate odio ut enim blandit volutpat. Vel eros donec ac odio tempor orci. Facilisis volutpat est velit egestas dui. Viverra nibh cras pulvinar mattis nunc sed blandit libero. Eu feugiat pretium nibh ipsum consequat nisl. Purus viverra accumsan in nisl nisi scelerisque.
 
@@ -14,60 +13,36 @@ Eu lobortis elementum nibh tellus molestie nunc. Dapibus ultrices in iaculis nun
 Morbi tempus iaculis urna id volutpat lacus laoreet. Diam quis enim lobortis scelerisque fermentum dui. Ut consequat semper viverra nam libero justo laoreet sit amet. Egestas congue quisque egestas diam in arcu cursus euismod quis. Sit amet nulla facilisi morbi tempus iaculis urna id. Fermentum leo vel orci porta non pulvinar. Enim tortor at auctor urna nunc id cursus metus aliquam. Morbi non arcu risus quis. Vel pretium lectus quam id leo in vitae turpis massa. Aliquam id diam maecenas ultricies mi eget mauris pharetra et. Nec tincidunt praesent semper feugiat nibh sed.`;
 /* eslint-enable */
 
-export default class Story_exampleComplex extends LightningElement {
+/**
+ * Component that shows a bunch of examples all at once,
+ * so we can visually ensure that the component behaves correctly
+ * in many different conditions all at once.
+ */
+export default class Story_exampleList extends LightningElement {
 
   /**
-   * Current scene we are working with
-   * @type {Scene}
-   */
-  @api currentScene = new Scene();
-
-  /**
-   * List of all scenes we have
+   * Collection of multiple scenes.
    * @type {Scene[]}
    */
-  @api allScenes;
-
-  /**
-   * Which scene to show by default
-   * @type {Integer}
-   */
-  @api initialSceneIndex = 1;
-
-  /**
-   * Initial scene we want to show
-   */
-
-  connectedCallback() {
-    this.allScenes = [
-      new Scene('Explicit Size', {
-        description: 'Component sandbox is to the explicit size 300x300, a border and padding',
-        sandboxStyles: 'width: 300px; height: 300px; border: 1px solid blue; padding: 20px;',
-        message: 'Message for component'
-      }),
-      new Scene('Empty Scene', {
-        description: 'Description for the scene',
-        message: null
-      }),
-      new Scene('Large Width Scene', {
-        description: 'Wide component with a message',
-        width: 'large',
-        message: LONG_TEXT
-      }),
-      new Scene('Medium Width Scene', {
-        width: 'medium',
-        message: LONG_TEXT
-      }),
-      new Scene('Small Width Scene', {
-        width: 'small',
-        message: LONG_TEXT
-      })
-    ];
-
-    // this.currentScene = this.allScenes[0];
-  }
-
-  handleSceneChanged(sceneEvent) {
-    this.currentScene = sceneEvent.detail;
-  }
+  @api scenes = [
+    new Scene('Empty Scene', {
+    }),
+    new Scene('Short Scene', {
+      message: 'Very short message.',
+      width: 'small'
+    }),
+    new Scene('Long Scene', {
+      message: LONG_TEXT
+    }),
+    new Scene('Skinny Scene', {
+      description: 'Uses the Small size from LDS',
+      width: 'small',
+      message: MEDIUM_TEXT
+    }),
+    new Scene('Wide Scene', {
+      description: 'Uses the Large size from LDS',
+      width: 'large',
+      message: MEDIUM_TEXT
+    }),
+  ];
 }

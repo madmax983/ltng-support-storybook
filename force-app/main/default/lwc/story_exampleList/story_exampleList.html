@@ -1,0 +1,23 @@
+<template>
+    <template for:each={scenes} for:item="scene">
+        <c-story_book
+            key={scene.label}
+            title={scene.label}
+            width={scene.value.width}
+        >
+            <!--
+                We can optionally include a description slot
+                and it will be shown within the story.
+            -->
+            <div slot="description">{scene.value.description}</div>
+
+            <!--
+                Finally we show our component.
+                This will be placed inside the 'sandbox' of the story
+            -->
+            <c-story_sample-component
+                message={scene.value.message}
+            ></c-story_sample-component>
+        </c-story_book>
+    </template>
+</template>
