@@ -154,24 +154,24 @@ Including the line `**/scene_*` within your `.forceignore` file, will ensure the
 
 See [the How to Use section](#how-to-use) for how to run and create your own stories.
 
-Permission Set: scene_StorybookParticipant
-
 ## Install via URL
 
 This works very similar to an App Exchange install.
 
 Please login to an available sandbox and click the link below.
 
-[https://test.salesforce.com/packaging/installPackage.apexp?p0=08c3s000000CafOAAS](https://test.salesforce.com/packaging/installPackage.apexp?p0=08c3s000000CafOAAS)
+[https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OoSDAA0](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OoSDAA0)
 
-(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=08c3s000000CafOAAS` <br />
+(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=04t3s000003OoSDAA0` <br />
 if you are already logged in)
-
-@CHANGE: update image to the install package
 
 ![Install for Admins](docs/images/installPackage.png)
 
 It is recommended to install for Admins Only (but all options will work)
+
+##### Pull down the components to run locally
+
+`sfdx force:source:pull` or `sfdx force:source:retrieve -p force-app/main/default/lwc`
 
 ##### View the Demos
 
@@ -180,6 +180,8 @@ That is it.
 Likely, you will never need to create Salesforce Pages for you Storybooks. (Although it is helpful if you desire to automate your visual testing - such as with Selenium)
 
 We have created three examples available for you, each as different tabs.
+
+If you would like others to access the demo pages, simply grant them on the `scene_StorybookParticipant` permission set.
 
 Thats it. See the [How to Use](#how-to-use) section for how to use the app.
 	
