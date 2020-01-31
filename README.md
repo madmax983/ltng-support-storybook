@@ -38,13 +38,108 @@ For more information, please see the [Licensing](#licensing) section below
 
 (Please see the [Installation](#install) for setup)
 
-Once you have the lwc components installed (and likely ignored by adding `**/scene_*` to your `.forceignore` file) - you can run the examples or create your own.
-
 To run the storybooks, simply start your [Local Lightning Web Development beta](https://developer.salesforce.com/blogs/2019/10/announcing-lwc-local-development-beta.html) by running the command `sfdx force:lightning:lwc:start`
 
 ![Screenshot of local lwc](docs/images/localLWC_Server.png)
 
+## Creating your Stories
+
+All that is needed to create your own stories is:
+
+**Create a `scene_` component**
+
+Create a new Lightning Web Component starting with the prefix `scene_` (ex: scene_comboBox, scene_yourComponent, etc)
+
+**Include a `story_book` component**
+
+Create a [story_book](#story_book) component to contain your test:
+
+ex:
+
+```
+<template>
+    <c-story_book width='large' title='Very Simple story'>
+
+        <c-story_sample-component
+            message={currentScene.value.messageToShow}
+        ></c-story_sample-component>
+
+        <div slot="description">
+            Very simple storybook story. This description will be on top.
+        </div>
+    </c-story_book>
+</template>
+```
+
+See here for more about the [story_book](#story_book) component.
+
+**Include a `Scene` to bind to**
+
+Within your component, create an instance of the [scene](#scene) class to bind your component to.
+
+This simply accepts a label and a value:
+
+```
+import {Scene} from 'c/story_book';
+const currentScene = new Scene(
+	//-- label
+	'Simple Scenario',
+	//-- value
+	{
+    	messageToShow: 'Message bound from the scene'
+	}
+);
+```
+
+#### NOTE: .forceignore
+
+It is likely that the stories are desired only to be included within version control and not on the org.
+
+Updating your `.forceignore` file, will ensure the storybook files are available locally, but will not be deployed to the org nor included within your packages.
+
+Add the following lines to your .forceignore file:
+
+* `**/_types`
+* `**/scene_*`
+* `**/scene_*/**`
+
+## Intellisense
+
+Please note that attention was paid to provide typed access and intelisense for all components.
+
+![Screenshot of Intellisense](docs/images/intellisenseExample.png)
+
+Within Visual Studio Code, simply hover your cursor over the html attributes and elements for additional documentation.
+
+This also applies for javascript code as-well.
+
+![Screenshot of intellisense](docs/images/intellisenseExample2.png)
+
+## Example Storybooks
+
+We have created three examples available for you, each as different tabs.
+
+![Screenshot of app pages](docs/images/storybookAppDemo.png)
+
+If you would like others to access the demo pages, simply grant them on the `scene_StorybookParticipant` permission set.
+
+ex:
+
+	sfdx force:user:permset:assign -n "scene_StorybookParticipant"
+
 There are three samples provided on how you could write your storybooks:
+
+* [Simple](#simple)
+* [List](#list)
+* [Complex](#complex)
+
+---
+
+#### NOTE: Likely, you will never need to create Salesforce Pages for you Storybooks.
+
+(Although it is helpful if you desire to automate your visual testing - such as with Selenium)
+
+----
 
 ## Simple
 
@@ -136,27 +231,104 @@ For more information, please see the [Licensing](#licensing) section below
 
 ---
 
+# Storybook Components
+
+### Scene
+
+A `Scene` is a class that represents a specific scenario for your component.
+
+<table>
+	<tr>
+		<th>Attribute</th><th>Type</th><th>Example</th><th>Description</th>
+	</tr>
+	<tr>
+		<td>Label</td><td>String</td><td>Scenario 1</td><td>Required: The label of the scene</td>
+	</tr>
+	<tr>
+		<td>Value</td><td>Object</td><td>{ message: 'Hello' }</td><td>Required: the values that represent the scenario - that you can bind to your component.</td>
+	</tr>
+</table>
+
+example:
+
+```
+import {Scene} from 'c/story_book';
+const currentScene = new Scene(
+	//-- label
+	'Simple Scenario',
+	//-- value
+	{
+    	messageToShow: 'Message bound from the scene'
+	}
+);
+```
+
+The Scene `value` is the most important, as it is the information you will bind to within your component.
+
+We recommend that this also include additional information about the test.  This would allow, for example, to show the component under different widths to see how it fills the space or deals with overflow.
+
+For an example, see the [story_exampleSimple story](force-app/main/default/lwc/story_exampleSimple/)
+
+### story_book
+
+The `story_book` component provides a `sandbox` (a place to demonstrate your component)
+
+<table>
+	<tr>
+		<th>Attribute</th><th>Type</th><th>Example</th><th>Description</th>
+	</tr>
+	<tr>
+		<td>Title</td><td>String?</td><td>Angry Response</td><td>Optional: title of the story</td>
+	</tr>
+	<tr>
+		<td>width</td><td>String? (wide|large|medium|narrow|small)</td><td>Narrow</td><td>Optional: how wide the sandbox is for your component</td>
+	</tr>
+	<tr>
+		<td>border</td><td>String? (true|false)</td><td>true</td><td>Optional: Whether the sandbox has a border - helpful for measuring margins / etc.</td>
+	</tr>
+	<tr>
+		<td>sandbox-styles</td><td>String?</td><td>"padding: 4px;</td><td>Optional: CSS style to apply to the sandbox for your component - helpful if measuring margins / etc.</td>
+	</tr>
+</table>
+
+**Description**
+Note that providing a &lt;div slot="description"&gt;...&lt;/div&gt;
+
+Puts your slot contents within the story towards the top.
+
+This can be helpful for clarifying what exactly is tested.
+
+**Your Component**
+
+Finally, any contents within the body of the `story_book` should be added for the test.
+
+For an example, see the [story_exampleSimple story](force-app/main/default/lwc/story_exampleSimple/)
+
 # Install
 
 Unlike many other salesforce examples, this does not require deployment to your org.
 
 ## Manual Install
 
-**Step 1. - download the latest under `Releases`**
-This will include the various `scene_*` lwc components.
+Manually installing is placing the Storybook lwc components within your codebase, so you can use it in your project.
+
+**Clone this repository and copy the lwc components **
+
+The only code necessary to use the stories are under the [force-app/main/default/lwc folder](https://github.com/SalesforceCloudServices/ltng-support-storybook/tree/master/force-app/main/default/lwc)
 
 Add these to your force-app/.../lwc folder for your project.
 
-**Step 2. - Update your `.forceignore` to ignore scene_ files**
-It is likely that the stories are desired only to be included within version control and not on the org.
+(For now, care is needed when merging the `jsconfig.json` file. This is a known issue.)
 
-Including the line `**/scene_*` within your `.forceignore` file, will ensure the storybook files are available locally, but will not be deployed to the org nor included within your packages.
+**That's it**
 
 See [the How to Use section](#how-to-use) for how to run and create your own stories.
 
 ## Install via URL
 
 This works very similar to an App Exchange install.
+
+**Install the package**
 
 Please login to an available sandbox and click the link below.
 
@@ -169,21 +341,42 @@ if you are already logged in)
 
 It is recommended to install for Admins Only (but all options will work)
 
-##### Pull down the components to run locally
+**Pull down the components to run locally**
+
+`sfdx force:source:retrieve -n ltng-support-storybook -p force-app/`
+
+**That's it**
+
+See [the How to Use section](#how-to-use) for how to run and create your own stories.
+
+## Other ways to install
+
+Ultimately, the only things needed to run the storybooks are the [Lightning Web Components under the force-app/main/default/lwc folder](https://github.com/SalesforceCloudServices/ltng-support-storybook/tree/master/force-app/main/default/lwc) locally.
+
+If desired, it is possible to push the code to Salesforce to then download locally - although this is generally not typical.
+
+You can also install using the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
+
+Then you can either:
+
+* Push the code to your org similar to [Manually Installing](#manual-install)
+  * `sfdx force:source:push -u ORG_ALIAS`
+* Install the package
+  * `sfdx force:package:install --package 04t3s000003OoSDAA0 -u ORG_ALIAS`
+* Install with the Metadata API
+  * `sfdx force:mdapi:deploy -w 10 -d mdapi -u ORG_ALIAS`
+
+**Afterwards, pull down the metadata to your local project:**
 
 `sfdx force:source:pull` or `sfdx force:source:retrieve -p force-app/main/default/lwc`
 
-##### View the Demos
+Although, you may need to run the following if you installed the package:
 
-That is it.
+`sfdx force:source:retrieve -n ltng-support-storybook -p force-app/`
 
-Likely, you will never need to create Salesforce Pages for you Storybooks. (Although it is helpful if you desire to automate your visual testing - such as with Selenium)
+**That's it**
 
-We have created three examples available for you, each as different tabs.
-
-If you would like others to access the demo pages, simply grant them on the `scene_StorybookParticipant` permission set.
-
-Thats it. See the [How to Use](#how-to-use) section for how to use the app.
+See [the How to Use section](#how-to-use) for how to run and create your own stories.
 	
 # Licensing
 
