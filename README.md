@@ -44,6 +44,24 @@ To run the storybooks, simply start your [Local Lightning Web Development beta](
 
 ![Screenshot of local lwc](docs/images/localLWC_Server.png)
 
+#### NOTE: Likely, you will never need to create Salesforce Pages for you Storybooks.
+
+(Although it is helpful if you desire to automate your visual testing - such as with Selenium)
+
+We have created three examples available for you, each as different tabs.
+
+![Screenshot of app pages](docs/images/storybookAppDemo.png)
+
+If you would like others to access the demo pages, simply grant them on the `scene_StorybookParticipant` permission set.
+
+ex:
+
+	sfdx force:user:permset:assign -n "scene_StorybookParticipant"
+
+----
+
+## Example Storybooks
+
 There are three samples provided on how you could write your storybooks:
 
 ## Simple
@@ -142,8 +160,11 @@ Unlike many other salesforce examples, this does not require deployment to your 
 
 ## Manual Install
 
-**Step 1. - download the latest under `Releases`**
-This will include the various `scene_*` lwc components.
+Manually installing is placing the Storybook lwc components within your codebase, so you can use it in your project.
+
+**Step 1. - Clone this repository and copy the lwc components **
+
+The only code necessary to use the stories are under the [force-app/main/default/lwc folder](https://github.com/SalesforceCloudServices/ltng-support-storybook/tree/master/force-app/main/default/lwc)
 
 Add these to your force-app/.../lwc folder for your project.
 
@@ -151,6 +172,8 @@ Add these to your force-app/.../lwc folder for your project.
 It is likely that the stories are desired only to be included within version control and not on the org.
 
 Including the line `**/scene_*` within your `.forceignore` file, will ensure the storybook files are available locally, but will not be deployed to the org nor included within your packages.
+
+**Step 3. - Create your own stories**
 
 See [the How to Use section](#how-to-use) for how to run and create your own stories.
 
@@ -177,13 +200,34 @@ It is recommended to install for Admins Only (but all options will work)
 
 That is it.
 
-Likely, you will never need to create Salesforce Pages for you Storybooks. (Although it is helpful if you desire to automate your visual testing - such as with Selenium)
+See the [How to Use](#how-to-use) section for how to use the app.
 
-We have created three examples available for you, each as different tabs.
+## Other ways to install
 
-If you would like others to access the demo pages, simply grant them on the `scene_StorybookParticipant` permission set.
+Ultimately, the only things needed to run the storybooks are the [Lightning Web Components under the force-app/main/default/lwc folder](https://github.com/SalesforceCloudServices/ltng-support-storybook/tree/master/force-app/main/default/lwc) locally.
 
-Thats it. See the [How to Use](#how-to-use) section for how to use the app.
+If desired, it is possible to push the code to Salesforce to then download locally - although this is generally not typical.
+
+You can also install using the [Salesforce CLI](https://developer.salesforce.com/tools/sfdxcli)
+
+Then you can either:
+
+* Push the code to your org similar to [Manually Installing](#manual-install)
+  * `sfdx force:source:push -u ORG_ALIAS`
+* Install the package
+  * `sfdx force:package:install --package 04t3s000003OoSDAA0 -u ORG_ALIAS`
+* Install with the Metadata API
+  * `sfdx force:mdapi:deploy -w 10 -d mdapi -u ORG_ALIAS`
+
+**Afterwards, pull down the metadata to your local project:**
+
+`sfdx force:source:pull` or `sfdx force:source:retrieve -p force-app/main/default/lwc`
+
+##### View the Demos
+
+That is it.
+
+See the [How to Use](#how-to-use) section for how to use the app.
 	
 # Licensing
 
