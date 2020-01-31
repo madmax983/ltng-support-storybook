@@ -27,6 +27,14 @@ Now, we are able to keep the testing information outside of the component and in
 
 Please see the [Installation](#install) section below for more on how to install on your Sandbox / Demo org.
 
+See the samples below for more:
+
+* [Simple](#simple)
+* [List](#list)
+* [Complex](#complex)
+
+Or see the [How to use section below](#how-to-use) on how to create your own stories.
+
 **Please note: sample code (metadata api and dx formats) are is also available in the [mdapi](./mdapi) and [dx](./dx) folders above**
 
 ---
