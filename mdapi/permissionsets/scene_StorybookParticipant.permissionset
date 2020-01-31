@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <applicationVisibilities>
+        <application>scene_StorybookDemo</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <description>Permission Set that is ONLY needed to see the demonstration app builder pages provided. It is not needed to run locally.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Storybook Participant</label>
+    <tabSettings>
+        <tab>scene_StorybookComplexExample</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>scene_StorybookListExample</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>scene_StorybookSimpleExample</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+</PermissionSet>
