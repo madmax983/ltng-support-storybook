@@ -1,264 +1,29 @@
 [![CircleCI](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook.svg?style=shield&circle-token=b8cd995667170827eb5728ab5a84815f10ccc3b6)](https://circleci.com/gh/SalesforceCloudServices/ltng-support-storybook)
 [![Github](https://img.shields.io/badge/license-MIT-343434.svg)](https://choosealicense.com/licenses/mit/)
-
-
-
-# INTERNAL NOTES
-
-Wait, what is this?
-
-This is meant to be a simple starting point for creating Lightning demo projects
-
-.
-
-# Structure of the project
-
-* doc - documentation resources
-  * images - images for documentation
-* data - data used in demo
-  * queries - queries used in extracting data for demos
-  * trees - data trees used for demos
-* dx - salesforce dx project
-* mdapi - mdapi version of dx project
-
-# How do I use this?
-
-**If using windows: We're in the middle of migrating to a salesforce cli plugin shortly. Please see the How do I use this manual steps below**
-
-**1.** Download the raw shellscript here:
-[https://github.com/SalesforceCloudServices/ltng-support-demo-template/blob/createTemplateProject/createTemplateProject.sh](https://github.com/SalesforceCloudServices/ltng-support-demo-template/blob/createTemplateProject/createTemplateProject.sh)
-
-Place it in a folder that you'll want to store your templates. (The template will be cloned and checked out in the same folder)
-
-**2.** Create a github project within the [SalesforceCloudServices Github](https://github.com/SalesforceCloudServices/) <br />
-with a name similar to: `ltng-support-NAME_OF_DEMO` <br />
-(for example: ltng-support-url-hack)
-
-And copy your new project name.
-
-**(The script will clone the project for you, and populate master for you)**
-	
-**3.** Run the Shellscript and follow the prompts
-
-	./createTemplateProject.sh
-	
-	... yadda yadda - remember to make a repo ...
-	
-	What is the name of the new repository? (ex: ltng-support-url-hack)
-	ltng-support-my-project-name
-	
-	
-	The git repository URL is expected to be:
-	git@github.com:SalesforceCloudServices/ltng-support-my-project-name.git
-	Is this correct? [Y/N]
-	y
-	
-	
-	This repository already seems to exist.
-	Should we continue? [Y/N]
-	y
-	
-	...
-	
-	Cloning into 'ltng-support-lds-responsive'...
-	
-	...
-	
-	renaming and adding origins
-	
-	...
-	
-	pushing project master
-	
-	...
-	
-	creating the dx project
-	
-	...	
-	
-	-- Your project  has been created
-	
-	
-# How do I use this: Manual Steps
-
-We're in the middle of transitioning from shellscript to a salesforce cli plugin that will accomplish the same as the shellscript.
-
-The manual steps below do the same as the shellscript.
-
-**1.** clone this repository where you will keep your templates:
-
-	git clone git@github.com:SalesforceCloudServices/ltng-support-demo-template.git
-	
-**2.** import to your demo repo of a similar name: ltng-support-NAME_OF_DEMO
-
-**3.** Create a Salesforce DX project in the 'dx' folder
-
-	//-- newRepositoryName would be the ltng-support-NAME_OF_DEMO
-	//-- ex: newRepositoryName="ltng-support-bootstrap"
-	sfdx force:project:create --projectname "${newRepositoryName}" -d dx
-	
-**4.** Rename the org in `config/project-scratch-def.json`
-	Change "orgName" value in the JSON to a better name of your scratch org (such as ltng-support-NAME_OF_DEMO)
-
-**5.** Create a scratch org to prepare and store your demo
-
-	// -a [[How you would like to identify the org]]
-	// -s [[make the project a default
-	// -v [[name of the alias of the lightning support org]]
-	// -d [[duration - in days]]
-	// -f /path/to/project-scratch-def.json
-	
-	sfdx force:org:create -d 20 -f config/project-scratch-def.json -s -v [[your hub alias]] -a [[new alias for this scratch org]]
-	
-	ex:
-	
-	sfdx force:org:create -d 20 -f config/project-scratch-def.json -v lightningSupport1 -s -a SOME_ALIAS
-	
-**6.** CLEANUP: Add `**.profiles` within .forceignore, to ensure we do not track profiles (only permission sets)
-
-# Quick Help:
-
-**How do I create a dx project?** <br />
-[sfdx force:project:create](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_project.htm#cli_reference_force_project)
-
-**How do I run a script after installation?** <br />
-[Create an Apex Class that implements InstallHandler](https://developer.salesforce.com/docs/atlas.en-us.packagingGuide.meta/packagingGuide/apex_post_install_script_create.htm)
-
-**How do I convert the dx source to metadata api (mdapi folder)?**
-
-	sfdx force:source:convert -r force-app -d ../mdapi
-
-**How do I create a package?**
-
-Be careful, you need to specify the --containeroptions/-o as Unlocked when you create it (and this cannot be changed)
-
---containeroptions/-o Unlocked  
---name/-n Name of the package  
---description/-d Description of the package  
---targetdevhubusername/-v Alias of the Dev Hub  
-
-	ex:
-	sfdx force:package2:create -o Unlocked -n ltng-support-url-hack -d "Demos of how to replace URL Hack Buttons in Lightning" -v lightningSupport1
-	
-	sfdx force:package:create -e -t Unlocked -r force-app/ -v lightningSupport1 -n ltng-support-schedule-wizard -d "Your Description"
-	
-[See Here for more](https://trailhead.salesforce.com/en/modules/unlocked-packages-for-customers/units/build-your-first-unlocked-package)
-
-**Then update the `sfdx-project.json` file**
-
-Add the following to the `packageDirectories` element in that file:
-
-	{
-	  "packageDirectories": [ 
-	    {
-	      "path": "force-app",
-	      "default": true,
-	      -- add these items below
-	      "package": "0Ho_xxx", -- your package2 ID (not subscriber)
-	      "versionName": "Version 1.0",
-	      "versionNumber": "1.0.0.NEXT"
-	      -- add the items above
-	    }
-	  ],
-	  "namespace": "",
-	  "sfdcLoginUrl": "https://login.salesforce.com",
-	  "sourceApiVersion": "42.0"
-	}
-	
-**THEN you need to create a package version**
-
-sfdx force:package:version:create --path force-app/ --wait 10 --installationkeybypass
-
-**Then** - change the deploy url within the `deploy via url` section down below.
-
-	ex: 
-	[https://test.salesforce.com/packaging/installPackage.apexp?p0=YOUR_VERSION_ID](https://test.salesforce.com/packaging/installPackage.apexp?p0=YOUR_VERSION_ID)
-	
-	and
-	(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0= YOUR_VERSION_ID ` <br />
-	if you are already logged in)
-	
-	turns into
-	
-	[https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6A000002sreiQAA](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t6A000002sreiQAA)
-	
-	and
-	(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0= 04t6A000002sreiQAA` <br />
-	if you are already logged in)
-	
-**How do I export data to trees?**
-
-Create a text file under /data/queries/API_Name__c.txt, with the query to use when exporting out the data.
-
-(Note the query should not include any fields that are read only - such as System fields, etc, but can include [parent-child queries](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships_query_using.htm).
-
-	SELECT Name,
-	  (
-	    SELECT LastName
-	    FROM Contacts
-	  )
-	FROM Account
-
-Then export using the following command:
-
-	sfdx force:data:tree:export -q data/queries/exampleQuicklinks.txt -d data/trees/
-
-**How do I get my password again?**
-
-sfdx force:user:display -u USERNAME
-
-**How do I create a scratch org?**
-
-	// -a [[How you would like to identify the org]]
-	// -s [[make the project a default
-	// -v [[name of the alias of the lightning support org]]
-	// -d [[duration - in days]]
-	// -f /path/to/project-scratch-def.json
-	
-	sfdx force:org:create -v lightningSupport1 -d 20 -f config/project-scratch-def.json -s -a SOME_ALIAS
-	
-# Before Releasing
-
-* Ensure the logo file/asset name is unique
-* Complete the work for the demo in a scratch org
-  * Update the demo scripts as needed
-  * Ensure the [How to Use](#how-to-use) section is accurate
-  * Review the @CHANGE tags within this doc are addressed
-  * Review the api names all match (ltng_*) as best as possible)
-  * Update any button Related Lists and Object Search Layouts
-* Export the data to trees (See [Quick Help](#quick-help) for more)
-  * Create all extracts as txt files under /data/queries/ <br /> see [Relationship Queries](https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_relationships.htm)
-     * `ex: select Name, (select FirstName, LastName from Contacts) from Account`
-  * Extract the data into /data/trees/
-     * ex: `sfdx force:data:tree:export -q data/queries/exampleQuicklinks.txt -d data/trees/`
-* Create an Unlocked Package for delivery (See [Quick Help](#quick-help) for more)
-  * `sfdx force:package2:create -o Unlocked -n ltng-support-url-hack -d "Demos of how to replace URL Hack Buttons in Lightning" -v lightningSupport1`
-  * Update in sfdx-project.json
-     * "id": "0Ho_xxx", -- your package2 ID (not subscriber)
-	  * "versionName": "Version 1.0",
-	  * "versionNumber": "1.0.0.NEXT"
-* Create Package Version (and new version when code is updated)
-  * `sfdx force:package:version:create --path force-app/ --wait 10 --installationkeybypass`
-* Create a new scratch org (through the createTemplateProject ...) to test
-  * Unlocked Package
-  * DX Deployment
-  * `sfdx force:org:create -v lightningSupport1 -d 20 -f config/project-scratch-def.json -s -a SOME_ALIAS`
-* Convert all DX data into metadata for those that need ant (Last Step)
-  * `cd dx; sfdx force:source:convert -r force-app -d ../mdapi`
-
-
-# DELETE EVERYTHING ABOVE WHEN READY
-
------
------
-------
-------
-------
-------
-------
+[![Code Coverage](https://img.shields.io/badge/Code Coverage-100-00BB00.svg)](https://choosealicense.com/licenses/mit/)
+[![Code Coverage](https://img.shields.io/badge/Branch Coverage-100-00BB00.svg)](https://choosealicense.com/licenses/mit/)
 
 
 # Overview
+
+Unit Tests are for Logic, are what Storybooks are for Visuals.
+
+This project is for developers and testers to simplify developing and verifying components.
+
+The goal is a simple framework that lets us see the same component in multiple scenarios (stories) next to one another - using hot reloading for instant verification with the [Local Lightning Web Development beta](https://developer.salesforce.com/blogs/2019/10/announcing-lwc-local-development-beta.html)
+
+For example, let's say we wanted to see how the component looked if:
+
+* If the component didn't have an message sent
+* If the component had such a large message, it would overflow
+
+**Did the css overflow kick in correctly? Did we get the right css style?  etc.**
+
+So we define each of those as "scenes" with the information that the component binds to.  Each of these define the scenario that we would want to visually verify as we develop.
+
+![Small Width Example](docs/images/StorybookSimpleExample.png)
+
+Now, we are able to keep the testing information outside of the component and in a consistent and reliable way. Without relying on Defaults.
 
 Please see the [Installation](#install) section below for more on how to install on your Sandbox / Demo org.
 
@@ -266,43 +31,130 @@ Please see the [Installation](#install) section below for more on how to install
 
 ---
 
-Overview
-
----
-
 NOTE: This project is for demonstration purposes.
 For more information, please see the [Licensing](#licensing) section below
 
-# Demo
+# How to Use
 
-![Gif Demo](docs/images/demo.gif)
+(Please see the [Installation](#install) for setup)
 
-What_the_demo_demonstrates_and_why_we_care
+Once you have the lwc components installed (and likely ignored by adding `**/scene_*` to your `.forceignore` file) - you can run the examples or create your own.
+
+To run the storybooks, simply start your [Local Lightning Web Development beta](https://developer.salesforce.com/blogs/2019/10/announcing-lwc-local-development-beta.html) by running the command `sfdx force:lightning:lwc:start`
+
+![Screenshot of local lwc](docs/images/localLWC_Server.png)
+
+There are three samples provided on how you could write your storybooks:
+
+## Simple
+
+A simple example is where you simply have a storybook, and data for it to bind against:
+
+![Simple Demo](docs/images/storybookDemoSimple.gif)
+
+There are three things ultimately needed:
+
+**Custom Component**
+Create a custom component that will contain an instance of a `story_book`.
+
+**A story_book Instance**
+Within the body of that `story_book` instance, include the component you want to test.
+
+(Optionally, you can include a `title` attribute to name the story. Additionally, a `description` slot is available, to further clarify what is being tested.)
+
+**Scene**
+Define a scene within your Custom Component's javascript controller, to bind your component to.
+
+---
+
+In this instance, the story is very close to traditional lightning web component development.  Yet we have a clear way to test how our component will look within this scenario, without deploying to Salesforce.
+
+For more see the [story_exampleSimple](force-app/main/default/lwc/story_exampleSimple/)
+
+## List
+
+Instead of testing once at a time, sometimes we would want to see multiple scenarios all at once.  (This can be helpful for testing css class refactoring)
+
+![List Demo](docs/images/storybookDemoList.gif)
+
+Similar to the simple example, we are still sticking to mostly traditional lightning web component development.  Yet we iterate over each scenario, and verify how the component behaves with each scenario.
+
+**Custom Component** -
+Create a custom component that will contain an instance of `story_book`.
+
+**Multiple Scenes** -
+Define an array to contain multiple `Scene` instances on your Custom Component's controller.
+
+**Iterator** -
+An iterator that will loop over each Scene within your Scene array.
+
+**A story_book instance** -
+Place an instance of story_book and bind it to the `for:item` within your iterator.
+
+Now we will have a story_book instance for each scene.
+
+Note: it is often recommended for your `Scene` records to include information about the test and not just data.  For example, specifying different widths will let you verify different [Lightning Design System widths](https://www.lightningdesignsystem.com/utilities/sizing/) all at once.
+
+For more information, plese see the [story_exampleList](force-app/main/default/lwc/story_exampleList/)
+
+## Complex
+
+Sometimes, you may want to have multiple scenes, but would like to choose between them.  The `Complex` example uses the `story_sceneSelector` component.
+
+Note, that you can specify the initial scene shown by the `story_sceneSelector`, so you can specify which scene to show by default.
+
+![Complex Demo](docs/images/storybookDemoComplex.gif)
+
+Similar to the Simple Example, we simply have a storybook bound to the current Scene.
+
+In this case though, we have a list of multiple scenes and allow the `story_sceneSelector` to help us choose which story to show.
+
+This is simply by listening for a `scene` event (that we listen for here by the `handleSceneChange` handler), and storing it as the scene to bind to.
+
+Here we will need:
+
+**Custom Component** -
+Create a custom component that will contain an instance of `story_book` and `story_sceneSelector`
+
+**Multiple Scenes** -
+Define an array to contain multiple `Scene` instances on your Custom Component's controller.
+
+**story_sceneSelector** -
+We define the initial scene to show by the 'index' (so we can consistently look at the same story after save).  We also must listen for the `save` event (by binding to `onsave` on the component), so we store the event.detail as the "current" scene.
+
+**A story_book instance** -
+Place an instance of story_book and bind it to the "current" scene.
+
+Note: it is recommended that an `if:true={...}` checking if the "current" scene is specified - as this will avoid null binding errors until the "current" scene is initialized.
+
+For more information, please see the [Complex Example](force-app/main/default/lwc/story_exampleComplex/)
 
 ----
 
 NOTE: This project is for demonstration purposes.
 For more information, please see the [Licensing](#licensing) section below
 
-# How to Use
-
-How_do_you_use_this_demo
-
-# TLDR How
-
-* Bullet_points_of_how_this_was_done
-
 ---
 
 # Install
 
-There are three methods available for you to install this demo, so you can play around with it:
+Unlike many other salesforce examples, this does not require deployment to your org.
 
-(Please note, all are intended as demonstrations and are not intended for deployment to Production as is)
+## Manual Install
 
-* [Install via URL](#install-via-url)
-* [Install Demo via Salesforce CLI](#install-via-salesforce-cli)
-* [Install Demo via Ant/Metadata API](#install-via-metadata-api)
+**Step 1. - download the latest under `Releases`**
+This will include the various `scene_*` lwc components.
+
+Add these to your force-app/.../lwc folder for your project.
+
+**Step 2. - Update your `.forceignore` to ignore scene_ files**
+It is likely that the stories are desired only to be included within version control and not on the org.
+
+Including the line `**/scene_*` within your `.forceignore` file, will ensure the storybook files are available locally, but will not be deployed to the org nor included within your packages.
+
+See [the How to Use section](#how-to-use) for how to run and create your own stories.
+
+Permission Set: scene_StorybookParticipant
 
 ## Install via URL
 
@@ -310,13 +162,9 @@ This works very similar to an App Exchange install.
 
 Please login to an available sandbox and click the link below.
 
-@CHANGE: update the link to the installation id (starts with 04t...)
--- ex: /installPackage.apexp?p0=04t6A000002sreiQAA
--- be sure that there are no spaces (it happens...)
+[https://test.salesforce.com/packaging/installPackage.apexp?p0=08c3s000000CafOAAS](https://test.salesforce.com/packaging/installPackage.apexp?p0=08c3s000000CafOAAS)
 
-[https://test.salesforce.com/packaging/installPackage.apexp?p0=INSTALL_SF_ID](https://test.salesforce.com/packaging/installPackage.apexp?p0= INSTALL_SF_ID)
-
-(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=INSTALL_SF_ID` <br />
+(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=08c3s000000CafOAAS` <br />
 if you are already logged in)
 
 @CHANGE: update image to the install package
@@ -325,102 +173,19 @@ if you are already logged in)
 
 It is recommended to install for Admins Only (but all options will work)
 
-##### Run Demo Setup
+##### View the Demos
 
-Next, click on the 'dice' and open the 'URL Hack Demo' app.
+That is it.
 
-@CHANGE: update image to your app in the launcher
+Likely, you will never need to create Salesforce Pages for you Storybooks. (Although it is helpful if you desire to automate your visual testing - such as with Selenium)
 
-![URL Hack Demo App](docs/images/appInLauncher.png)
-
-and run `Setup` from the `Demo Setup` tab.
-
-@CHANGE: update the image to your setup page
-
-![URL Hack Demo Setup](docs/images/demoSetup1.png)
-
-This will then perform any additional setup (such as creating records, etc).
-
-##### Run the Demos
+We have created three examples available for you, each as different tabs.
 
 Thats it. See the [How to Use](#how-to-use) section for how to use the app.
-
-@CHANGE: Remove the `Known Issue` section if record types are not needed,
--- otherwise, make the following changes in this section
-
-#### -- Known Issue -- Add the missing permissions on the permission set
-
-If you get an error saying 'This record is not available' (when creating records),
-you are likely affectd by a known issue with Unlocked Package deploys.
-
-(This is also mentioned from the Setup page)
-
-We are working with different teams, but it appears as though the installation works correctly from Salesforce CLI, but requires additional steps from the insllation URL.
-
-**We appologize for this inconvenience and are working towards correcting it**
-
-**1.** Navigate to the `Demo Setup` page
-
-@CHANGE: update screenshot to exact image within the Setup
-@CHANGE: update the DemoSetup Component to the exact names of the record types needed.
-@CHANGE: update to the exact names of the record types to add
-
-![Dependent Picklist Demo page](docs/images/correctPermissionSet.png)
-
-and click on the link **Add the 'Master', 'Type A' and 'Type B' record types to the permission set'**
-
-This will navigate you to the permission set in your org.
-
-**3.** Click edit and enable the record types for that permission set.
-
-@CHANGE: update screenshot to exactly the the RecordTypes needed.
-
-![Add record types to permission set](docs/images/correctPermissionSet2.png)
-
-## Installing via the Salesforce CLI
-
-This assumes you have already installed the [Salesforce CLI]() and [Connected the Salesforce CLI to your org](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_web_flow.htm).
-
-However, the Salesforce CLI can be used with any org and does not require Salesforce DX to be enabled. (Although enabling the DX / Dev Hub would give some great benefits, and would only require care of [certain object permissions: Scratch Org Info, ActiveScratchOrg, NamespaceRegistry](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_add_users.htm) - as they are not available in all orgs)
-
-**1.** Run the following command:
-
-	sfdx force:mdapi:deploy -d mdapi -u [[orgAlias]] -w
-
-**2.** Add the permission set to your user
-
-@CHANGE: Always use permission sets
-- Set the {PermissionSetApiName} to the API name of your Permission Set.
-
-	sfdx force:user:permset:assign -n {PermissionSetApiName} -u [[orgAlias]]
-	
-**3.** Upload the data
-
-@CHANGE: If data is needed, update the tree file name, often the name of the SObject
-
-	sfdx force:data:tree:import -f data/tree/{SOBJECT}.json -u [[orgAlias]]
-	
-...
-
-##### Run the Demos
-
-Thats it. See the [How to Use](#how-to-use) section for how to use the app.
-
-	sfdx force:org:open -u [[orgAlias]]
-
-# Bit more detail...
-
-More_detail_on_how_this_was_done
-
-## Component
-
-What_about_the_component
-
-	sample code
 	
 # Licensing
 
-Copyright 2018 Salesforce
+Copyright 2020 Salesforce
 
 (MIT)
 

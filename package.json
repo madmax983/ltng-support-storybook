@@ -1,6 +1,6 @@
 {
   "name": "ltng-support-storybook",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "Example Storybook like components for lightning - Facilitators for Local LWC",
   "directories": {
