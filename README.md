@@ -25,6 +25,16 @@ So we define each of those as "scenes" with the information that the component b
 
 Now, we are able to keep the testing information outside of the component and in a consistent and reliable way. Without relying on Defaults.
 
+---
+
+Additionally, there may be times where our components require wrapper classes to display properly.
+
+![Screenshot of wrapper tests](docs/images/Wrappers.png)
+
+Within our stories, we can provide the necessary context (contained css class wrappers) for our components.
+
+---
+
 Please see the [Installation](#install) section below for more on how to install on your Sandbox / Demo org.
 
 See the samples below for more:
@@ -370,7 +380,7 @@ Then you can either:
 * Push the code to your org similar to [Manually Installing](#manual-install)
   * `sfdx force:source:push -u ORG_ALIAS`
 * Install the package
-  * `sfdx force:package:install --package 04t3s000003OoSDAA0 -u ORG_ALIAS`
+  * `sfdx force:package:install --package 04t3s000003OoSDAA0 -u ORG_ALIAS -w 10`
 * Install with the Metadata API
   * `sfdx force:mdapi:deploy -w 10 -d mdapi -u ORG_ALIAS`
 
