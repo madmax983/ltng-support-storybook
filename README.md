@@ -31,7 +31,9 @@ Additionally, there may be times where our components require wrapper classes to
 
 ![Screenshot of wrapper tests](docs/images/Wrappers.png)
 
-Within our stories, we can provide the necessary context (contained css class wrappers) for our components.
+Now we can verify the component looks as we expect within the Local LWC Beta, and without having to deploy.
+
+Stories can provide the necessary context (containing css class wrappers or components) for them to render correctly.
 
 ---
 
