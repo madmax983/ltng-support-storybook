@@ -5,11 +5,11 @@
 # sets the current window's name
 screen -X title "storybook"
 
-screen -t default bash
-screen -t log
-screen -t lint
-screen -t test
-screen -t lwc
+screen -t default
+screen -t log 
+screen -t lint # npm run lint:lwc:watch
+screen -t test # npm run test:lwc:watch
+screen -t lwc # npm run lwc
 
 screen -X select 0
 
