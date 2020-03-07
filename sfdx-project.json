@@ -4,8 +4,8 @@
             "path": "force-app",
             "default": true,
             "package": "ltng-support-storybook",
-            "versionName": "ver 1.0",
-            "versionNumber": "1.0.0.NEXT"
+            "versionName": "ver 1.1",
+            "versionNumber": "1.1.0.NEXT"
         }
     ],
     "namespace": "",
@@ -15,6 +15,7 @@
         "ltng-support-storybook": "0Ho3s000000KyoBCAS",
         "ltng-support-storybook@0.1.0-1": "04t3s000003OoS8AAK",
         "ltng-support-storybook@1.0.0-1": "04t3s000003OoSDAA0",
-        "ltng-support-storybook@1.0.0-2": "04t3s000003OodIAAS"
+        "ltng-support-storybook@1.0.0-2": "04t3s000003OodIAAS",
+        "ltng-support-storybook@1.1.0-1": "04t3s000003OodNAAS"
     }
 }

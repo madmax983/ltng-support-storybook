@@ -352,9 +352,9 @@ This works very similar to an App Exchange install.
 
 Please login to an available sandbox and click the link below.
 
-[https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OoSDAA0](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OodIAAS)
+[https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OoSDAA0](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t3s000003OodNAAS)
 
-(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=04t3s000003OodIAAS` <br />
+(or simply navigate to `https://YOUR_SALESFORCE_INSTANCE/packaging/installPackage.apexp?p0=04t3s000003OodNAAS` <br />
 if you are already logged in)
 
 ![Install for Admins](docs/images/installPackage.png)
@@ -382,7 +382,7 @@ Then you can either:
 * Push the code to your org similar to [Manually Installing](#manual-install)
   * `sfdx force:source:push -u ORG_ALIAS`
 * Install the package
-  * `sfdx force:package:install --package 04t3s000003OodIAAS -u ORG_ALIAS -w 10`
+  * `sfdx force:package:install --package 04t3s000003OodNAAS -u ORG_ALIAS -w 10`
 * Install with the Metadata API
   * `sfdx force:mdapi:deploy -w 10 -d mdapi -u ORG_ALIAS`
 
