@@ -12,14 +12,17 @@ This project is for developers and testers to simplify developing and verifying 
 
 The goal is a simple framework that lets us see the same component in multiple scenarios (stories) next to one another - using hot reloading for instant verification with the [Local Lightning Web Development beta](https://developer.salesforce.com/blogs/2019/10/announcing-lwc-local-development-beta.html)
 
+## Stories confirm scenarios at a glance
+
 For example, let's say we wanted to see how the component looked if:
 
-* If the component didn't have an message sent
-* If the component had such a large message, it would overflow
+* What if no text is sent at all?
+* What if the container is narrow? Does it display correctly?
+* What if there is lots of text, does our container would overflow?
 
-**Did the css overflow kick in correctly? Did we get the right css style?  etc.**
+We define each of those as scenarios as scenes "scenes".
 
-So we define each of those as "scenes" with the information that the component binds to.  Each of these define the scenario that we would want to visually verify as we develop.
+Each scene renders the scenario that we would want to visually verify as we develop.
 
 ![Small Width Example](docs/images/StorybookSimpleExample.png)
 
@@ -27,7 +30,9 @@ Now, we are able to keep the testing information outside of the component and in
 
 ---
 
-Additionally, there may be times where our components require wrapper classes to display properly.
+## Stories give Context
+
+Additionally, there may be times where our components require "Context" to display properly. (Containing tags / classes / etc.)
 
 ![Screenshot of wrapper tests](docs/images/Wrappers.png)
 
@@ -66,7 +71,7 @@ To run the storybooks, simply start your [Local Lightning Web Development beta](
 
 All that is needed to create your own stories is:
 
-**Create a `scene_` component**
+**Create a component starting with `scene_`**
 
 Create a new Lightning Web Component starting with the prefix `scene_` (ex: scene_comboBox, scene_yourComponent, etc)
 
@@ -119,7 +124,6 @@ Updating your `.forceignore` file, will ensure the storybook files are available
 
 Add the following lines to your .forceignore file:
 
-* `**/_types`
 * `**/scene_*`
 * `**/scene_*/**`
 
